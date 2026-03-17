@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import processMultipart from 'express-fileupload/lib/processMultipart';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -66,5 +67,38 @@ const userSchema = new mongoose.Schema({
         },
         deadline: Date
     }],
-}, { timestamps: true }
+},
+{
+    timestamps: true,
+
+}
 );
+
+userSchema.pre("save",async function (next){
+if(!this.isModified("password")){
+    next();
+}
+this.password =await bcrypt.hash(this.password,10);
+
+})
+userSchema.methods.generateToken=function(){
+return  jwt.sign({id:this._id},processMultipart.env.JWT_SECRET,{
+    expiresIn:processMultipart.env.JWT_EXPIRE,
+});
+};
+
+userSchema.methods.comparePassword = async function (enterPassword){
+return await bcrypt.compare(enteredPassword,this.password);
+};
+
+
+userSchema.methods.getRestPasswordToken =function(){
+    const restToken =crypto.randomBytes(20).toString("hex");
+
+this.resetPasswordToken=crypto.createHash("sha256").update(resetToken).digest("hex");
+
+this.resetPasswordExpire = Date.now() +15*60*1000;
+return resetToken;
+
+};
+export const User = mongoose.model("User", userSchema);

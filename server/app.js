@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
-
+import authRouter from './router/userRoutes.js";'
 config();
 const app = express();
 app.use(
@@ -19,9 +19,9 @@ credentials: true,
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-//database connection 
+//database connection
 
-connectDB();
+app.use("/api/v1/auth",authRouter);
 
 app.use(errorMiddleware);
 
