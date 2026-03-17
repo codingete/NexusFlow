@@ -33,7 +33,7 @@ const validateForm = () => {
 
   if (!formData.email) {
     newErrors.email = "Email is required";
-  } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+  } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
     newErrors.email = "Email is invalid";
   }
 
@@ -135,6 +135,46 @@ return (
   )}
 </div>
 
+{/* Password*/}
+<div>
+  <label className="label">Password</label>
+  <input
+    type="Password"
+    name="Password"
+    value={formData.Password}
+    onChange={handleChange}
+    className={`input ${errors.email ? "input-error" : ""}`}
+    placeholder="Enter your Password"
+  />
+  {errors.Password && (
+    <p className="text-sm text-red-600">{errors.Password}</p>
+  )}
+</div>
+
+{/* Forgot Password Link */}
+<div className="text-right">
+  <Link
+    to="/forgot-password"
+    className="text-sm text-blue-600 hover:text-blue-500"
+  >
+    Forgot your password?
+  </Link>
+</div>
+{/* Submit Button */}
+<button
+  type="submit"
+  disabled={isLoggingIn}
+  className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {isLoggingIn ? (
+    <div className="flex justify-center items-center">
+      <Loader className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
+      Signing In...
+    </div>
+  ) : (
+    "Sign In"
+  )}
+</button>
   </form>
 </div>
 
