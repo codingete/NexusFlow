@@ -4,7 +4,9 @@ import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
-import authRouter from './router/userRoutes.js";'
+import authRouter from './router/userRoutes.js";';
+import adminRouter from './router/adminRoutes.js';
+
 config();
 const app = express();
 app.use(
@@ -22,6 +24,7 @@ app.use(express.urlencoded({extended: true}))
 //database connection
 
 app.use("/api/v1/auth",authRouter);
+app.use("/api/v1/admin",adminRouter);
 
 app.use(errorMiddleware);
 
