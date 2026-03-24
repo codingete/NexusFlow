@@ -4,28 +4,34 @@ import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
-import authRouter from './router/userRoutes.js";';
-import adminRouter from './router/adminRoutes.js';
+import authRouter from "./router/userRoutes.js";
+import adminRouter from "./router/adminRoutes.js";
 
 config();
+
 const app = express();
+
+// CORS
 app.use(
-    cors(
-    {
-origin:[process.env.FRONTED_URL],
-methods:["GET" , "POST","PUT", "DELETE"],
-credentials: true,
-    })
-
+cors({
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+})
 );
-app.use(cookieParser())
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
-//database connection
 
-app.use("/api/v1/auth",authRouter);
-app.use("/api/v1/admin",adminRouter);
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Database connection
+connectDB();
+
+// Routes
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/admin", adminRouter);
+
+// Error middleware
 app.use(errorMiddleware);
 
 export default app;

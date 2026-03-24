@@ -1,57 +1,67 @@
 import express from "express";
-import { createStudent, createTeacher, updateStudent, updateTeacher } from "../controllers/adminController.js";
-import multer from "multer";
-import { isAuthenticated ,isAuthorized} from "../middlewares/authMiddleware.js";
+import { 
+  createStudent, 
+  createTeacher, 
+  updateStudent, 
+  updateTeacher, 
+  deleteStudent, 
+  deleteTeacher 
+} from "../controllers/adminController.js";
+import { isAuthenticated, isAuthorized } from "../middlewares/authMiddleware.js";
 import { getAllUsers } from "../services/userServices.js";
 
 const router = express.Router();
 
+// ----------------- STUDENT ROUTES -----------------
 router.post(
-"/create-student",
-isAuthenticated,
-isAuthorized("Admin"),
-createStudent
+  "/create-student",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  createStudent
 );
 
 router.put(
-"/update-student/:id",
-isAuthenticated,
-isAuthorized("Admin"),
-updateStudent
+  "/update-student/:id",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  updateStudent
 );
 
 router.delete(
-"/delete-student/:id",
-isAuthenticated,
-isAuthorized("Admin"),
-deleteStudent
+  "/delete-student/:id",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  deleteStudent
 );
 
-
+// ----------------- TEACHER ROUTES -----------------
 router.post(
-"/create-teacher",
-isAuthenticated,
-isAuthorized("Admin"),
-createTeacher
+  "/create-teacher",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  createTeacher
 );
+
 router.put(
-"/update-teacher/:id",
-isAuthenticated,
-isAuthorized("Admin"),
-updateTeacher
+  "/update-teacher/:id",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  updateTeacher
 );
 
 router.delete(
-"/delete-teacher/:id",
-isAuthenticated,
-isAuthorized("Admin"),
-deleteTeacher
+  "/delete-teacher/:id",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  deleteTeacher
 );
 
+// ----------------- GET ALL USERS -----------------
 router.get(
-"/users",
-isAuthenticated,
-isAuthorized("Admin"),
-getAllUsers
+  "/users",
+  isAuthenticated,
+  isAuthorized("Admin"),
+  getAllUsers
 );
+
 export default router;
