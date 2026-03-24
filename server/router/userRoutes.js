@@ -1,7 +1,7 @@
 import express from "express";
 import { registerUser, forgetPassword, getUser, login, logout, resetPassword } from "../controllers/authController.js";
 import multer from 'multer';
-import { isAuthenticated } from "../middlewares/authMIddleware.js";
+import { isAuthenticated } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
