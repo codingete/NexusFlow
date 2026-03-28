@@ -41,6 +41,25 @@ useEffect(()=>{
   dispatch(getUser());
 },[dispatch]);
 
+const ProtectedRoute =({ children, allowedRoles })=>{
+
+if (!authUser){
+  return < Navigate to ="/login" replace />;
+}
+
+if (allowedRoles?.length && authUser?.role && !allowedRoles.includes(authUser.role)){
+const  redirectPath =authUser.role==="Admin" ? "/admin" : authUser.role==="Teacher"?"/teacher": "student";
+
+return <Navigate to={redirectPath} replace />;
+
+}
+
+
+return children;
+
+};
+
+
 if(isCheckingAuth && !authUser){
 return(
 <div className="flex justify-center items-center h-screen">
@@ -57,11 +76,30 @@ return(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+{/*Admin Routes*/}
+<Route
+path="/admin"
+element={<ProtectedRoute> allowedRoutes={["Admin"]}
+<DashboardLayout userRole={"Admin"}/>
+</ProtectedRoute>
+
+}
+>
+<Route index element ={<AdminDashboard/>} />
+<Route path="students" element={<ManageStudents/>}/>
+<Route path="teacher" element={<ManageTeachers/>}/>
+<Route path="assign-supervisor" element={<AssignSupervisor/>}/>
+<Route path="deadlines" element={<DeadlinesPage/>}/>
+<Route path="projects" element={<ProjectsPage/>}/>
+</Route>
+
     </Routes>
     <ToastContainer themes="dark"/>
   </BrowserRouter>
 );
 
 };
+
 
 export default App;
