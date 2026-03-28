@@ -388,6 +388,8 @@ onChange={(e) =>
   <input
     type="number"
     required
+    max={10}
+    min={1}
     value={formData.maxStudents}
     onChange={(e) =>
       setFormData({ ...formData, maxStudents: e.target.value })

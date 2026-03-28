@@ -41,6 +41,13 @@ useEffect(()=>{
   dispatch(getUser());
 },[dispatch]);
 
+useEffect(() => {
+  if (authUser?.role === "Admin") {
+    dispatch(getAllUsers());
+  }
+}, [authUser]);
+
+
 const ProtectedRoute =({ children, allowedRoles })=>{
 
 if (!authUser){
