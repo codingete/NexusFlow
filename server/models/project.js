@@ -85,10 +85,10 @@ deadline:{
 );
 
 // Indexing for better query performance
-projectSchema.index({ student: 1 });
-projectSchema.index({ supervisor: 1 });
-projectSchema.index({ status: 1 });
+projectsSchema.index({ student: 1 });
+projectsSchema.index({ supervisor: 1 });
+projectsSchema.index({ status: 1 });
 
 export const Project =
-  mongoose.models.Project || mongoose.model('Project', projectSchema);
+  mongoose.models.Project || mongoose.model('Project', projectsSchema);
 

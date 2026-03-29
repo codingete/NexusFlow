@@ -1,6 +1,6 @@
 import { asyncHandler } from '../middlewares/asyncHandler.js';
-import ErrorHandler from '../models/error.js';
-import User from '../models/user.js';
+import ErrorHandler from '../middlewares/error.js';
+import {User} from '../models/user.js';
 import * as userServices from '../services/userServices.js';
 import * as projectService from '../services/projectServices.js';
 
@@ -71,9 +71,7 @@ if (!req.files || req.files.length === 0) {
 
 const updatedProject = await projectService.addFilesToProject(
     projectId,
-    req.files
-);
-
+    req.files);
 res.status(200).json({
     success: true,
     message: "File uploaded successfully",
