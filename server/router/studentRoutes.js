@@ -29,8 +29,8 @@ router.post(
   '/upload-projectid',
   isAuthenticated,
   isAuthorized("Student"),
-  //upload.array("files", 10),
-  // handleUploadError,
+  upload.array("files", 10),
+  handleUploadError,
   uploadFiles
 );
 
