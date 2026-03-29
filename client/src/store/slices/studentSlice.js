@@ -18,6 +18,21 @@ export const submitProjectProposal = createAsyncThunk(
     }
   }
 );
+
+export const fetchProject = createAsyncThunk(
+  "student/fetchproject",
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosInstance.get("/student/project")
+      return res.data.data?.project;
+    } catch (error) {
+    
+    toast.error(error.response.data.message|| "Failed to fetch project");
+    return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const studentSlice = createSlice({
   name: "student",
   initialState: {
