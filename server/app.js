@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import authRouter from "./router/userRoutes.js";
 import adminRouter from "./router/adminRoutes.js";
+import studentRouter from "./router/studentRoutes.js";
 
 config();
 
@@ -30,6 +31,7 @@ connectDB();
 // Routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/student", studentRouter);
 
 // Error middleware
 app.use(errorMiddleware);
