@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { Loader } from "lucide-react";
 
 // Auth Pages
 import LoginPage from "./pages/auth/LoginPage";
@@ -30,83 +33,83 @@ import ManageTeachers from "./pages/admin/ManageTeachers";
 import AssignSupervisor from "./pages/admin/AssignSupervisor";
 import DeadlinesPage from "./pages/admin/DeadlinesPage";
 import ProjectsPage from "./pages/admin/ProjectsPage";
-import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
-import { Loader } from "lucide-react";
+
+// ✅ Import your auth actions
+import { getUser, getAllUsers } from "./store/slices/authSlice";
 
 const App = () => {
-const{authUser,isCheckingAuth}= useSelector((state)=>state.auth);
-const dispatch= useDispatch();
-useEffect(()=>{
-  dispatch(getUser());
-},[dispatch]);
+  const { authUser, isCheckingAuth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-useEffect(() => {
-  if (authUser?.role === "Admin") {
-    dispatch(getAllUsers());
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (authUser?.role === "Admin") {
+      dispatch(getAllUsers());
+    }
+  }, [authUser, dispatch]);
+
+  const ProtectedRoute = ({ children, allowedRoles }) => {
+    if (!authUser) {
+      return <Navigate to="/login" replace />;
+    }
+
+    if (
+      allowedRoles?.length &&
+      authUser?.role &&
+      !allowedRoles.includes(authUser.role)
+    ) {
+      const redirectPath =
+        authUser.role === "Admin"
+          ? "/admin"
+          : authUser.role === "Teacher"
+          ? "/teacher"
+          : "/student";
+
+      return <Navigate to={redirectPath} replace />;
+    }
+
+    return children;
+  };
+
+  if (isCheckingAuth && !authUser) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
   }
-}, [authUser]);
-
-
-const ProtectedRoute =({ children, allowedRoles })=>{
-
-if (!authUser){
-  return < Navigate to ="/login" replace />;
-}
-
-if (allowedRoles?.length && authUser?.role && !allowedRoles.includes(authUser.role)){
-const  redirectPath =authUser.role==="Admin" ? "/admin" : authUser.role==="Teacher"?"/teacher": "student";
-
-return <Navigate to={redirectPath} replace />;
-
-}
-
-
-return children;
-
-};
-
-
-if(isCheckingAuth && !authUser){
-return(
-<div className="flex justify-center items-center h-screen">
-<Loader className="size-10 animate-spin"/>
-</div>
-)
-}
-
 
   return (
-  <BrowserRouter>
-    <Routes>
-      {/* Auth Routes */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Auth Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-{/*Admin Routes*/}
-<Route
-path="/admin"
-element={<ProtectedRoute> allowedRoutes={["Admin"]}
-<DashboardLayout userRole={"Admin"}/>
-</ProtectedRoute>
-
-}
->
-<Route index element ={<AdminDashboard/>} />
-<Route path="students" element={<ManageStudents/>}/>
-<Route path="teacher" element={<ManageTeachers/>}/>
-<Route path="assign-supervisor" element={<AssignSupervisor/>}/>
-<Route path="deadlines" element={<DeadlinesPage/>}/>
-<Route path="projects" element={<ProjectsPage/>}/>
-</Route>
-
-    </Routes>
-    <ToastContainer themes="dark"/>
-  </BrowserRouter>
-);
-
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <DashboardLayout userRole={"Admin"} />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="students" element={<ManageStudents />} />
+          <Route path="teacher" element={<ManageTeachers />} />
+          <Route path="assign-supervisor" element={<AssignSupervisor />} />
+          <Route path="deadlines" element={<DeadlinesPage />} />
+          <Route path="projects" element={<ProjectsPage />} />
+        </Route>
+      </Routes>
+      <ToastContainer theme="dark" />
+    </BrowserRouter>
+  );
 };
-
 
 export default App;
